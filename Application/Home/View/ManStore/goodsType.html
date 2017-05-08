@@ -1,0 +1,205 @@
+<extend name="User/saleOrders" />
+<block name="style">
+	<style>
+		.mya a,span{
+			position: relative;
+			top:0px;
+			right:0px;
+		}
+	</style>
+</block>
+<block name="main">
+  <div class="orders-tab fl">
+    <span href="javascript:;" class="tab">
+      <span class="title">订单查询</span>
+      <ul>
+        <li><a href="{:U('Orders/index')}" class="borderradius-1 order-today ">近期订单</a></li>
+      </ul>
+    </span>  
+    <span href="javascript:;" class="tab">
+      <span class="title">账号管理</span>
+      <ul>
+        <li><a href="{:U('User/userInfo')}" class="borderradius-1 my-account">我的账号</a></li>
+        <li><a href="{:U('User/collect')}" class="borderradius-1 my-favorite ">我的收藏</a></li>
+        <li><a href="{:U('Orders/myRate')}" class="borderradius-1 my-favorite ">我的评论</a></li>
+      </ul>
+    </span>
+    <span href="javascript:;" class="tab">
+      <span class="title">我的店铺</span>
+      <ul>
+        <li><a href="{:U('Orders/saleOrders')}" class="borderradius-1 my-account ">店内订单</a></li>
+        <li><a href="{:U('User/userStore')}" class="borderradius-1 my-favorite ">店内商品</a></li>
+      </ul>
+    </span>
+  </div>
+    <div class="setting-box" id="setting-box">
+    <h3>商品分类管理</h3>
+    <div class="user-info clearfix ct-commonblack">
+        <table class="table table-condensed table-striped table-hover">
+          <tr align="center">
+            <th style="width:100px">序号</th>
+            <th style="width:100px">分类名</th>
+            <th style="width:100px">操作</th>
+          </tr>
+<foreach name="list" item="v">          
+          <tr name="goods">
+            <td style="width:100px" >{$v.id}</td>
+            <td style="width:100px" name="name">{$v.name}</td>
+            <td style="width:100px" >
+              <button onClick="goods_save(this,{$v.id})">修改</button>
+              <button onClick="type_del(this,{$v.id})">删除</button>
+            </td>
+          </tr>
+</foreach>
+        </table>
+        <button onclick="goods_addType(this)">添加商品分类</button>
+    </div>
+  </div>
+
+</block>
+<block name="script">
+  <script>
+  function goods_save(obj,id){
+
+    // console.log($(obj).parent().prev().html());
+    // console.log(id);
+    $(obj).parent().prev().replaceWith('<input style="width:100px" type="text" name="name" value="'+$(obj).parent().prev().html()+'">');
+    $(obj).parent("td").prepend('<button onClick="goods_finish(this,'+id+')">完成</button>');
+    $(obj).remove();
+
+  }
+
+  function goods_finish(obj,id){
+    // console.log($(obj).parent().prev().val());
+    var name = $(obj).parent().prev().val();
+    // console.log(name);
+    if (name == '') {
+
+      // layer.alert('1');
+      layer.msg('修改失败,分类名不能为空');
+
+    }else{
+
+      $.post("{:U('GoodsType/saveType')}", { name:name,id:id },
+      function(data){
+        console.log(data);
+        if (data == 1) {
+
+          $(obj).parent().prev().replaceWith('<td style="width:100px" name="name">'+name+'</td>');
+          $(obj).parent("td").prepend('<button onClick="goods_save(this,'+id+')">修改</button>');
+          layer.msg('修改成功！');
+          $(obj).remove();
+
+
+        }else if(data == 3){
+
+          $(obj).parent().prev().replaceWith('<td style="width:100px" name="name">'+name+'</td>');
+          $(obj).parent("td").prepend('<button onClick="goods_save(this,'+id+')">修改</button>');
+          layer.msg('没有修改');
+          $(obj).remove();
+
+        }else{
+
+          $(obj).parent().prev().replaceWith('<td style="width:100px" name="name">'+name+'</td>');
+          $(obj).parent("td").prepend('<button onClick="goods_save(this,'+id+')">修改</button>');
+          layer.msg('修改失败');
+          $(obj).remove();
+
+        }
+
+    }, "json");
+
+    }
+
+
+  }
+
+  function goods_addType(obj){
+
+    console.log($(obj).before('<input style="width:100px" type="text" value=""'));
+    $(obj).before('<input type="text">');
+    $(obj).before('<button onClick="goods_testType(this)">添加完成</button>');
+    $(obj).remove();
+
+  }
+
+  function goods_testType(obj){
+    // console.log($(obj).siblings('input').val());
+    var name = $(obj).siblings('input').val();
+   
+
+    // console.log($('tr[name="goods"]').last().after(tr));
+    if(name == ''){
+
+      // layer.msg('分类名不能为空');
+      layer.msg('没有添加分类');
+      $(obj).prev().remove();
+      $(obj).before('<button onclick="goods_addType(this)">添加商品分类</button>');
+      $(obj).remove();
+
+    }else if ((/^[a-zA-z0-9\u4E00-\u9FA5]*$/).test(name)) {
+
+      var sid = "{$sid}";
+
+      $.post("{:U('GoodsType/addType')}",{name:name,sid:sid },function (data){
+
+        if (data['true']) {
+           var tr = '<tr name="goods">';
+              tr+='<td style="width:100px" >'+data.id+'</td>';
+              tr+='<td style="width:100px" >'+name+'</td>';
+              tr+='<td style="width:100px" ><button onClick="goods_save(this,'+data.id+')">修改</button> ';
+              tr+='<button onClick="type_del(this,'+data.id+')">删除</button></td>';
+              tr+='</tr>';
+          // console.log(data);
+          $('tr').last().after(tr);
+          layer.msg('添加成功');
+          $(obj).prev().remove();
+          $(obj).before('<button onclick="goods_addType(this)">添加商品分类</button>');
+          $(obj).remove();
+
+        }else{
+
+            layer.msg('添加失败');
+        }
+
+      })    
+
+    }else{
+      
+      layer.msg('分类名不能为特殊符号');
+
+    }
+    
+  }
+
+  function type_del(obj,id){
+
+
+    $.post("{:U('GoodsType/del')}", { id:id },
+      function(data){
+      
+        if (data == 1) {
+
+          $(obj).parent().parent().fadeTo("slow", 0.03, function(){
+          $(obj).parent().parent().slideUp("slow", function() {
+            layer.msg('删除成功！');
+            });
+          });
+          
+        }else if(data==2){
+
+          // alert('您这个分类有商品，不能删除此分类！');
+          layer.msg('您这个分类有商品，不能删除此分类！'); 
+
+        }else{
+
+          layer.msg('删除失败');
+
+        }
+
+    }, "json");
+
+   // console.log($(obj).parent().parent().remove());
+  }
+  </script>
+</block>

@@ -1,0 +1,74 @@
+<extend name="User/saleOrders" />
+<block name="style">
+	<style>
+		.mya a,span{
+			position: relative;
+			top:0px;
+			right:0px;
+		}
+	</style>
+</block>
+<block name="main">
+  <div class="orders-tab fl">
+    <span href="javascript:;" class="tab">
+      <span class="title">订单查询</span>
+      <ul>
+        <li><a href="{:U('Orders/index')}" class="borderradius-1 order-today ">近期订单</a></li>
+      </ul>
+    </span>  
+    <span href="javascript:;" class="tab">
+      <span class="title">账号管理</span>
+      <ul>
+        <li><a href="{:U('User/userInfo')}" class="borderradius-1 my-account active">我的账号</a></li>
+        <li><a href="{:U('User/collect')}" class="borderradius-1 my-favorite ">我的收藏</a></li>
+        <li><a href="{:U('Orders/myRate')}" class="borderradius-1 my-favorite ">我的评论</a></li>
+      </ul>
+    </span>
+    <span href="javascript:;" class="tab">
+      <span class="title">我的店铺</span>
+      <ul>
+        <li><a href="{:U('Orders/saleOrders')}" class="borderradius-1 my-account ">店内订单</a></li>
+        <li><a href="/favorite/restaurant" class="borderradius-1 my-favorite ">店内商品</a></li>
+      </ul>
+    </span>
+  </div>
+  <div class="setting-box" id="setting-box">
+    <div class="user-info clearfix ct-commonblack">
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">当前用户名</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">{$list.name}</p>
+          </div>
+          <label for="userName" class="col-sm-2 control-label">新用户名：</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="userName">
+          </div>
+            <button style="margin-left:50px;" id="saveUser"   class="btn btn-default">修改用户名</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</block>
+<block name="script">
+  <script>
+
+      $('button').on('click',function() {
+        // alert(1);
+        var name = $('#userName').val();
+        var id = {$list.id};
+        // console.log(oid);
+        // var that = $(this);
+        $.post('{:U("User/saveUserName")}',
+          {name:name,id:id},
+          function(data) {
+            console.log(data);
+
+            window.location.href = "{:U('User/userInfo')}";
+            
+          },
+          'json');
+       } );
+  </script>
+  </block>

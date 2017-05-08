@@ -1,0 +1,111 @@
+<extend name="User/saleOrders" />
+<block name="style">
+	<style>
+		.mya a,span{
+			position: relative;
+			top:0px;
+			right:0px;
+		}
+	</style>
+</block>
+<block name="main">
+  <div class="orders-tab fl">
+    <span href="javascript:;" class="tab">
+      <span class="title">订单查询</span>
+      <ul>
+        <li><a href="{:U('Orders/index')}" class="borderradius-1 order-today ">近期订单</a></li>
+      </ul>
+    </span>  
+    <span href="javascript:;" class="tab">
+      <span class="title">账号管理</span>
+      <ul>
+        <li><a href="{:U('User/userInfo')}" class="borderradius-1 my-account active">我的账号</a></li>
+        <li><a href="{:U('User/collect')}" class="borderradius-1 my-favorite ">我的收藏</a></li>
+        <li><a href="{:U('Orders/myRate')}" class="borderradius-1 my-favorite ">我的评论</a></li>
+      </ul>
+    </span>
+    <span href="javascript:;" class="tab">
+      <span class="title">我的店铺</span>
+      <ul>
+        <li><a href="{:U('Orders/saleOrders')}" class="borderradius-1 my-account ">店内订单</a></li>
+        <li><a href="/favorite/restaurant" class="borderradius-1 my-favorite ">店内商品</a></li>
+      </ul>
+    </span>
+  </div>
+  <div class="setting-box" id="setting-box">
+    <div class="user-info clearfix ct-commonblack">
+      <form class="form-horizontal" action="javascript:;">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">当前用户名</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">{$Think.session.userinfo.name}</p>
+          </div>
+          <label for="userName" class="col-sm-2 control-label">新密码：</label>
+          <div class="col-sm-10">
+            <input type="password" style="width:200px" class="form-control" id="userName" name="name">
+          </div>
+          <label for="userName" class="col-sm-2 control-label">确认密码:</label>
+          <div class="col-sm-10">
+            <input type="password" style="width:200px" class="form-control" id="pass" name="pass">
+          </div>
+            <button style="margin-left:50px;" id="saveUser"   class="btn btn-default">修改密码</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</block>
+<block name="script">
+  <script>
+
+      $('button').on('click',function() {
+
+        var name = $('input[name="name"]').val();
+
+        var pass = $('input[name="pass"]').val();
+
+        //判断密码不能为空
+        if(name ==''){
+
+        	$('input[name="pass"]').next().remove('span');
+        	$('input[name="pass"]').after('<span>密码不能为空</span>');
+
+        	return false;
+
+        }
+
+        if(!name.match(/^[A-Za-z0-9_]{6,20}$/)){
+
+        	$('input[name="name"]').next().remove('span');
+			$('input[name="name"]').after('<span>只能由字母,数字组合，6-20个字符</span>');
+
+			return false;
+		}
+
+        if(name !== pass){
+
+        	$('input[name="pass"]').next().remove('span');
+        	$('input[name="pass"]').after('<span>密码不一致</span>');
+        	return false;
+        }
+
+        $.post('{:U("Out/userPass")}',{pass:pass},function (data){
+
+          	if(data ==1){
+          		//密码修改成功
+
+          		// $('input[name="pass"]').after('<span>修改成功</span>');
+
+          		alert('修改成功');
+
+          		location.href ='{:U("Login/LoginExtends")}';
+
+          	}else if(data ==2){
+          		//密码修改失败
+          		$('input[name="pass"]').after('<span>密码修改失败</span>');
+          	}
+
+          },'json');
+       } );
+  </script>
+  </block>

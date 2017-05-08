@@ -1,0 +1,180 @@
+<extend name="saleOrders" />
+<block name="style">
+	<style>
+		.mya a,span{
+			position: relative;
+			top:0px;
+			right:0px;
+		}
+	</style>
+</block>
+<block name="main">
+<div class="page-wrap">
+        <div class="inner-wrap">
+
+<div class="account-cont clearfix">
+	<div class="orders-tab fl">
+  <span href="javascript:;" class="tab">
+    <span class="title">订单查询</span>
+    <ul>
+      <li><a href="{:U('Orders/index')}" class="borderradius-1 order-today active">近期订单</a></li>
+    </ul>
+  </span>  
+  <span href="javascript:;" class="tab">
+    <span class="title">账号管理</span>
+    <ul>
+      <li><a href="{:U('User/userInfo')}" class="borderradius-1 my-account">我的账号</a></li>
+      <li><a href="{:U('User/collect')}" class="borderradius-1 my-favorite ">我的收藏</a></li>
+      <li><a href="{:U('Orders/myRate')}" class="borderradius-1 my-favorite ">我的评论</a></li>
+    </ul>
+  </span>
+  <span href="javascript:;" class="tab">
+    <span class="title">我的店铺</span>
+    <ul>
+      <li><a href="{:U('Orders/saleOrders')}" class="borderradius-1 my-account ">店内订单</a></li>
+      <li><a href="{:U('User/userStore')}" class="borderradius-1 my-favorite ">店内商品</a></li>
+    </ul>
+  </span>
+</div>
+  <div class="setting-box" id="setting-box">
+  	  <div class="user-info clearfix ct-commonblack" >
+            <!-- <i class="icon i-uncomment fl"></i> --> 
+            <!-- <span style="font-size: 20px;">您还没有开通店铺<a class="cc-lightred-new" href="">立即申请</a></span> -->
+       </div>
+       <div>
+            <if condition="$list eq false">
+              <h1>暂无订单</h1>
+            <else />
+            <table class="table table-hover">
+            	<tr>
+            		<th>订单号</th>
+            		<th>所属店铺</th>
+            		<th>订单总价</th>
+            		<th>状态</th>
+            	</tr>
+           <foreach name="list" item="vo">
+           		<tr>
+           			<td class="orderid">{$vo['id'][0]['oid']}</td>
+           			<td>{$vo.sid}</td>
+           			<td>￥{$vo.price}(包含配送费和包装盒费用)</td>
+                <if condition="$vo.status eq 0">
+           			  <td>等待商家派送</td>
+                </if>
+                <if condition="$vo.status eq 1">
+                  <td class="btn btn-warning">确认收货</td>
+                </if>
+                <if condition="$vo.status eq 2">
+                  <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@{$vo.sid}" id="myModal" data-oid="{$vo['id'][0]['oid']}">评论</button></td>
+                </if> 
+                <if condition="$vo.status eq 3">
+                  <td>已评论</td>
+                </if> 
+           		</tr>
+           		<foreach name="vo['id']" item="v">
+	           		<tr>
+	           			<td>{$v.gid.name}</td>
+	           			<td><img src="__PUBLIC__/{$v.gid.pic}" alt="" height="50"></td>
+	           			<td>单价：￥{$v.gid.price}</td>
+	           			<td>{$v.num}份</td>
+	           		</tr>
+           		</foreach>
+              <tr>
+                <td>收件人：{$vo.aid.name}{$vo.aid.sex}</td>
+                <td>联系电话：{$vo.aid.phone}</td>
+                <td>收货地址：{$vo.aid.address}</td>
+              </tr>
+           </foreach>
+          
+            </table>
+            <div class="mya">
+            {$show}
+            </div>
+        </if>
+      	</div>
+  </div>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+        <form action="{:U('Orders/ordersRate')}" method="post">
+          <div class="form-group">
+            <label for="input-id" class="control-label">评分:</label>
+            <input id="input-id" type="number" class="rating" min=0 max=5 step=0.5 data-size="lg" name="rate">
+            <!-- <input type="text" class="form-control" id="recipient-name"> -->
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="control-label">留言:</label>
+            <textarea class="form-control" id="message-text" name="message"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="submit" class="btn btn-primary">提交</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</block>
+  <block name="script">
+    <script>
+      $('.i-top-yarrow').mouseover(function() {
+        $('.top-loginbar').addClass('hover');
+      });
+      $('#is-login').mouseleave(function() {
+        $('.top-loginbar').removeClass('hover');
+      });
+
+      $('#exampleModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var recipient = button.data('whatever') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        var oid = "<input type='hidden' name='oid' value='"+button.data('oid')+"'>";
+        modal.find('.modal-title').text('订单'+button.data('oid') + recipient);
+        modal.find('.modal-body input').val(recipient);
+        modal.find('.modal-body form').append(oid);
+      });
+
+     
+
+     
+      $('td[class="btn btn-warning"]').on('click',function() {
+ 
+        var oid = $(this).siblings('.orderid').html();
+
+        var that = $(this);
+        $.post('{:U("Orders/ajaxChangeOrderStatus")}',
+          {oid:oid},
+          function(data) {
+            that.removeClass('btn-warning');
+
+            that.addClass('btn-primary');
+            that.addClass('btn');
+            that.html(data['content']);
+            that.attr('data-toggle', 'modal');
+            that.attr('data-target', '#exampleModal');
+            that.attr('data-whatever', '@{$vo.sid}');
+            that.attr('data-oid', '{$vo['id'][0]['oid']}');
+            // alert(1);
+            
+          },
+          'json');
+       } );
+
+      $("#input-id").rating();
+
+      $('#myModal').modal(options);
+    </script>
+  
+</block>
+  

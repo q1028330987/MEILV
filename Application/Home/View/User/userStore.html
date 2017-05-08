@@ -1,0 +1,257 @@
+<extend name="User/saleOrders" />
+<block name="style">
+	<style>
+		.mya a,span{
+			position: relative;
+			top:0px;
+			right:0px;
+		}
+	</style>
+</block>
+<block name="main">
+  <div class="orders-tab fl">
+    <span href="javascript:;" class="tab">
+      <span class="title">订单查询</span>
+      <ul>
+        <li><a href="{:U('Orders/index')}" class="borderradius-1 order-today ">近期订单</a></li>
+      </ul>
+    </span>  
+    <span href="javascript:;" class="tab">
+      <span class="title">账号管理</span>
+      <ul>
+        <li><a href="{:U('User/userInfo')}" class="borderradius-1 my-account ">我的账号</a></li>
+        <li><a href="{:U('User/collect')}" class="borderradius-1 my-favorite ">我的收藏</a></li>
+        <li><a href="{:U('Orders/myRate')}" class="borderradius-1 my-favorite ">我的评论</a></li>
+      </ul>
+    </span>
+    <span href="javascript:;" class="tab">
+      <span class="title">我的店铺</span>
+      <ul>
+        <li><a href="{:U('Orders/saleOrders')}" class="borderradius-1 my-account ">店内订单</a></li>
+        <li><a href="{:U('User/userStore')}" class="borderradius-1 my-favorite active">店内商品</a></li>
+      </ul>
+    </span>
+  </div>
+  <div class="setting-box" id="setting-box" style="height: 800px;">
+    <div class="user-info clearfix ct-commonblack">
+<if condition="$info eq false">
+      <blockquote>
+        <p>您还没有店铺或已经在申请,请耐心等待审核</p>
+        <footer>如还没有申请店铺请点击申请店铺 <a href="{:U('ManStore/storeApplication')}"><cite title="Source Title">申请店铺</cite></a></footer>
+      </blockquote>
+
+<else />
+
+<div class="container-fluid">
+  <div class="row-fluid" id="divrow">
+    <div  class="span6" style="float:left; width:400px;height:100px;">
+      <img alt="140x140" width="150px" src="__PUBLIC__/{$info.pic}" class="img-thumbnail" />
+<!--     </div>
+    <div class="span6"  style="width:300px;height:100px;"> -->
+      <dl style="float: right;margin-left:170px; margin-top:-105px;">
+        <dt style="display:inline;">店铺名　:　</dt>
+        <dd style="display:inline;">{$info.name}</dd><br>
+        <dt style="display:inline;">营业时间:　</dt>
+        <dd style="display:inline;">{$info.start}:00-{$info.stop}:00</dd><br>
+        <dt style="display:inline;">店铺地址:　</dt>
+        <dd style="display:inline;">{$info.address}</dd><br>
+        <dt style="display:inline;">店铺号码:　</dt>
+        <dd style="display:inline;">{$info.phone}</dd><br>
+        <dt style="display:inline;">起送￥:　</dt>
+        <dd style="display:inline;">{$info.upsend}　</dd>
+        <dt style="display:inline;">配送￥:　</dt>
+        <dd style="display:inline;">{$info.peisend}</dd>
+        <dt><a type="button" href="{:U('ManStore/setStore')}">设置店铺信息</a></dt>
+      </dl>
+    </div>
+<if condition="$info['status'] eq 1">
+        <button class="btn btn-default btn-sm" style="margin-left:663px;margin-top:-100px;" onClick="stop_store(this,'{$info.id}')" type="button">店铺营业中</button>
+<elseif condition="$info['status'] eq 0 " />
+        <button class="btn btn-default btn-sm" style="margin-left:663px;margin-top:-100px;" onClick="start_store(this,'{$info.id}')" type="button">店铺休息中</button>
+</if>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span12">
+      <ul class="nav nav-tabs" style="height:100px">
+        <li class="{$id == ''?'active':''}" >
+          <a href="{:U('User/userStore')}" style="color:#333;">全部商品</a>
+        </li>
+<foreach name="goodsType" item="v">
+        <li class="{$id == $v['id']?'active':''}" >
+         <a href="{:U('User/userStore')}?id={$v.id}" style="color:#333;" >{$v.name}</a>
+        </li>
+</foreach>
+        <li class="" style="float: right;">
+          <a href="{:U('ManStore/goodsType')}"  style="color:#333;" >商品分类管理</a>
+        </li>
+        <li class="" style="float: right;">
+          <a href="{:U('ManStore/addGoods')}"  style="color:#333;" >添加商品</a>
+        </li>
+      </ul>
+      <div class="row-fluid">
+      </div>
+<foreach name="goodsData" item="vg">
+        <div class="col-xs-3 span3" id="goods" style="margin-top:10px;background:white">
+        
+          <img alt="140x140" width="150px" height="150px" src="__PUBLIC__/{$vg.pic}" class="img-rounded" />
+          <div class="row-fluid">
+            <dt style="">商品名:　</dt><dd style="height:20px;overflow: hidden;">{$vg.name}</dd>
+            <dt style="display:inline;">价　格:　</dt><dd style="display:inline;">{$vg.price}</dd><br>
+          </div>
+          <div class="row-fluid" >
+            <div class="span6" id="button">
+<if condition="$vg.status eq 1">
+               <button class="btn btn-danger btn-xs" onClick="goods_stop(this,'{$vg.id}')"  type="button">下架</button>
+<else />
+               <button class="btn btn-default btn-xs" onClick="goods_start(this,'{$vg.id}')" type="button">上架</button>
+</if>
+               <button class="btn btn-default btn-xs" onClick="goods_save({$vg.id})" type="button">编辑</button>
+               <button class="btn btn-default btn-xs" onClick="goods_del(this,'{$vg.id}')" type="button">删除</button>
+            </div>
+          </div>
+        </div>
+</foreach>
+
+    </div>
+  </div>
+</div>
+
+</if>
+    </div>
+  </div>
+
+</block>
+<block name="script">
+<script>
+
+function goods_stop(obj,id){
+
+ layer.confirm('确认要下架吗？', {
+
+  btn: ['确定','取消'] 
+  }, function(){
+
+    $.post('{:U("ManStore/stop")}', { id: id },
+    function(data){
+      if (data) {
+
+        $(obj).parent("div").prepend('<button class="btn btn-default btn-xs" onClick="goods_start(this,'+id+')" type="button">上架</button>');
+        layer.msg('您的商品已下架');
+        $(obj).remove();
+
+      }
+    },'json');
+
+  }, function(){
+
+    layer.msg('您选择了不下架')});
+
+}
+function goods_start(obj,id){
+
+  layer.confirm('确认要上架吗？', {
+
+  btn: ['确定','取消'] 
+  }, function(){
+
+    $.post('{:U("ManStore/start")}', { id: id },
+    function(data){
+      if (data) {
+        $(obj).parent("div").prepend('<button class="btn btn-danger btn-xs" onClick="goods_stop(this,'+id+')"  type="button">下架</button>');
+        layer.msg('您的商品已上架');
+        $(obj).remove();
+
+      }
+    },'json');
+
+  }, function(){
+
+    layer.msg('您选择了不上架')});
+  }
+
+
+  function goods_del(obj,id){
+
+  if (confirm('确认要删除商品么？')) {
+
+    $.post('{:U("ManStore/del")}', { id: id },
+    function(data){
+      if (data == 1) {
+        $(obj).parent().parent().parent().fadeTo("slow", 0.05, function(){
+          $(obj).parent().parent().parent().slideUp("slow", function() {
+
+            layer.msg('删除成功');
+
+          });
+        });
+      }else{
+
+        layer.msg('删除失败');
+
+      }
+    });
+
+  }
+
+}
+
+
+function goods_save(id){
+
+    location.href = "{:U('ManStore/saveGoods')}?id="+id;
+
+}
+
+
+function stop_store(obj,id){
+
+  if (confirm('确认要关店休息么？')) {
+    // console.log($(obj).parent("div"));
+    $.post('{:U("ManStore/stopStore")}', { id: id },
+    function(data){
+      if (data) {
+        
+        $(obj).parent("#divrow").append('<button class="btn btn-default btn-sm" style="margin-left:663px;margin-top:-100px;" onClick="start_store(this,'+id+')" type="button">店铺休息中</button>');
+        layer.msg('您的店铺已休息');
+        $(obj).remove();
+
+      }else{
+
+        layer.msg('休息失败！');
+
+      }
+    });
+
+  }
+
+}
+
+
+function start_store(obj,id){
+
+  if (confirm('开始营业？？')) {
+
+    // console.log($(obj).parent("#divrow"));
+
+    $.post('{:U("ManStore/startStore")}', { id: id },
+    function(data){
+      if (data) {
+        
+        $(obj).parent("div").append('<button class="btn btn-default btn-sm" style="margin-left:663px;margin-top:-100px;" onClick="stop_store(this,'+id+')" type="button">店铺营业中</button>');
+        layer.msg('您的店铺已营业');
+        $(obj).remove();
+
+      }else{
+
+        layer.msg('开店失败！');
+
+      }
+    });
+
+  }
+
+}
+       
+</script>
+</block>

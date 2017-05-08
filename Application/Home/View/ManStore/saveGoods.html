@@ -1,0 +1,79 @@
+<extend name="User/saleOrders" />
+<block name="style">
+	<style>
+		.mya a,span{
+			position: relative;
+			top:0px;
+			right:0px;
+		}
+	</style>
+</block>
+<block name="main">
+  <div class="orders-tab fl">
+    <span href="javascript:;" class="tab">
+      <span class="title">订单查询</span>
+      <ul>
+        <li><a href="{:U('Orders/index')}" class="borderradius-1 order-today ">近期订单</a></li>
+      </ul>
+    </span>  
+    <span href="javascript:;" class="tab">
+      <span class="title">账号管理</span>
+      <ul>
+        <li><a href="{:U('User/userInfo')}" class="borderradius-1 my-account">我的账号</a></li>
+        <li><a href="{:U('User/collect')}" class="borderradius-1 my-favorite ">我的收藏</a></li>
+        <li><a href="{:U('Orders/myRate')}" class="borderradius-1 my-favorite ">我的评论</a></li>
+      </ul>
+    </span>
+    <span href="javascript:;" class="tab">
+      <span class="title">我的店铺</span>
+      <ul>
+        <li><a href="{:U('Orders/saleOrders')}" class="borderradius-1 my-account ">店内订单</a></li>
+        <li><a href="{:U('User/userStore')}" class="borderradius-1 my-favorite ">店内商品</a></li>
+      </ul>
+    </span>
+  </div>
+    <div class="setting-box" id="setting-box">
+    <h3>编辑商品</h3>
+    <div class="user-info clearfix ct-commonblack">
+       <form action="{:U('ManStore/saveGoods')}" enctype="multipart/form-data" method="post">
+        <div class="form-group">
+          <label for="exampleInputEmail1">商品分类</label>
+        <select name="tid" class="form-control" style="width: 160px">
+<foreach name="list" item="v">              
+            <option value="{$v.id}" {$v['id']==$goods['tid']?selected:''}>{$v.name}</option>
+</foreach>
+        </select>
+
+        </div>
+        <div class="form-group">
+          <label for="name">商品名</label>
+          <input type="text" class="form-control" value="{$goods.name}" style="width: 250px;" name="name" id="name" placeholder="请输入店铺名">
+          <input type="hidden" name="id" value="{$goods.id}">
+        </div>
+        <div class="form-group">
+          <label for="price">商品价格</label>
+          <input type="text" class="form-control" value="{$goods.price}" style="width: 250px;" name="price" id="price" placeholder="请输入商品价格">
+        </div>
+        <div class="form-group">
+          <label for="des">商品描述</label>
+
+          <input type="text" class="form-control" value="{$goods.des}"  name="des" id="des" placeholder="请输入商品描述">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">原商品照片</label>
+          <img src="__PUBLIC__/{$goods.pic}" height="50px" alt="">
+          <input type="file" name='pic' id="exampleInputFile">
+          <p class="help-block">不添加照片等于不修改商品相片</p>
+        </div>
+        <button type="submit" id="btn" class="btn btn-warning">提交</button>
+      </form>
+
+    </div>
+  </div>
+
+</block>
+<block name="script">
+  <script>
+
+  </script>
+</block>

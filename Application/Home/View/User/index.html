@@ -1,0 +1,58 @@
+<extend name="User/saleOrders" />
+<block name="style">
+	<style>
+		.mya a,span{
+			position: relative;
+			top:0px;
+			right:0px;
+		}
+	</style>
+</block>
+<block name="main">
+  <div class="orders-tab fl">
+  <span href="javascript:;" class="tab">
+    <span class="title">订单查询</span>
+    <ul>
+      <li><a href="{:U('Orders/index')}" class="borderradius-1 order-today ">近期订单</a></li>
+    </ul>
+  </span>  
+  <span href="javascript:;" class="tab">
+    <span class="title">账号管理</span>
+    <ul>
+      <li><a href="{:U('User/userInfo')}" class="borderradius-1 my-account active">我的账号</a></li>
+      <li><a href="{:U('User/collect')}" class="borderradius-1 my-favorite ">我的收藏</a></li>
+      <li><a href="{:U('Orders/myRate')}" class="borderradius-1 my-favorite ">我的评论</a></li>
+    </ul>
+  </span>
+  <span href="javascript:;" class="tab">
+    <span class="title">我的店铺</span>
+    <ul>
+      <li><a href="{:U('Orders/saleOrders')}" class="borderradius-1 my-account ">店内订单</a></li>
+      <li><a href="{:U('User/userStore')}" class="borderradius-1 my-favorite ">店内商品</a></li>
+    </ul>
+  </span>
+</div>
+ <div class="setting-box" id="setting-box">
+    <div class="user-info clearfix ct-commonblack">
+      <i class="icon i-user-circle"></i>    
+      <span class="source-label fl">用户名：{$list.name}</span>
+      <a href="{:U('User/saveUserName')}?id={$list.id}" target="" class="s-btn j-modify-info"><span class="s-btn">修改用户名</span></a>
+      <!-- <a href="{:U('User/saveUser')}" target="" class="s-btn j-modify-info"><span class="s-btn">修改账户信息</span></a> -->
+    </div>
+    <div class="user-info clearfix ct-commonblack">
+      <span class="source-label fl">手机号：{$list.phone}</span>
+      <a href="{:U('User/savePhone')}" target="" class="s-btn j-modify-info"><span class="s-btn">修改手机号</span></a>
+    </div>
+
+    <div class="user-info clearfix ct-commonblack">
+      <span class="source-label fl">密　码：******</span>
+      <a href="{:U('Out/userPass')}" target="" class="s-btn j-modify-info"><span class="s-btn">修改密码</span></a>
+    </div>
+  </div>
+</div>
+      </div>
+    </div>
+
+  
+</block>
+  

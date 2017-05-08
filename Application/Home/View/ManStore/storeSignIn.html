@@ -1,0 +1,152 @@
+<extend name="User/saleOrders" />
+<block name="style">
+	<style>
+		.mya a,span{
+			position: relative;
+			top:0px;
+			right:0px;
+		}
+	</style>
+</block>
+<block name="main">
+  <div class="orders-tab fl">
+    <span href="javascript:;" class="tab">
+      <span class="title">订单查询</span>
+      <ul>
+        <li><a href="{:U('Orders/index')}" class="borderradius-1 order-today ">近期订单</a></li>
+      </ul>
+    </span>  
+    <span href="javascript:;" class="tab">
+      <span class="title">账号管理</span>
+      <ul>
+        <li><a href="{:U('User/userInfo')}" class="borderradius-1 my-account">我的账号</a></li>
+        <li><a href="{:U('User/collect')}" class="borderradius-1 my-favorite ">我的收藏</a></li>
+        <li><a href="{:U('Orders/myRate')}" class="borderradius-1 my-favorite ">我的评论</a></li>
+      </ul>
+    </span>
+    <span href="javascript:;" class="tab">
+      <span class="title">我的店铺</span>
+      <ul>
+        <li><a href="{:U('Orders/saleOrders')}" class="borderradius-1 my-account ">店内订单</a></li>
+        <li><a href="{:U('User/userStore')}" class="borderradius-1 my-favorite ">店内商品</a></li>
+      </ul>
+    </span>
+  </div>
+
+    <div class="setting-box" id="setting-box">
+      <div class="user-info clearfix ct-commonblack">
+<if condition="$list eq 2">
+  
+      <blockquote>
+        <p>您已经在申请,请耐心等待审核</p>
+      </blockquote>
+
+<elseif condition="$list eq 3" />
+
+<!--       <blockquote>
+        <p>您的申请被拒绝，请修改您申请的信息</p>
+        <a href="{:U('setApply')}"><p>请修改</p></a>
+      </blockquote> -->
+      <blockquote>
+        <p>您的申请被拒绝，请修改您申请的信息</p>
+        <footer><a href="{:U('ManStore/setApply')}"><cite title="Source Title">请修改申请信息</cite></a>
+      </blockquote>
+
+<else />
+    <h3>申请店铺</h3>
+    <div class="user-info clearfix ct-commonblack">
+       <form action="{:U('ManStore/storeApplication')}" enctype="multipart/form-data" method="post">
+        <div class="form-group">
+          <label for="exampleInputEmail1">店铺分类</label>
+        <select name="storetype" id=""  class="form-control" style="width: 160px">
+            <option value="0">--请选择分类--</option>
+<foreach name="list" item="v">              
+            <option value="{$v.id}">{$v.name}</option>
+</foreach>
+        </select>
+
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">店铺名</label>
+          <input type="text" class="form-control" style="width: 250px;" name="storename" id="exampleInputPassword1" placeholder="请输入店铺名">
+        </div>
+        <div class="form-group">
+          <label for="address">店铺地址</label>
+          <input type="text" class="form-control" name="address" id="address" placeholder="请输入店铺地址">
+        </div>
+        <div class="form-group">
+          <label for="phone">店铺号码</label>
+          <input type="text" class="form-control" name="phone" id="phone" placeholder="请输入店铺号码">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputFile">店铺照片</label>
+          <input type="file" name='photo' id="exampleInputFile">
+          <p class="help-block">请添加你的店铺相片</p>
+        </div>
+        <button type="submit" id="btn" class="btn btn-warning">提交</button>
+      </form>
+
+    </div>
+</if>
+  </div>
+  </div>
+
+</block>
+<block name="script">
+  <script>
+
+    //{:U('ManStore/storeApplication')}
+
+  //   var re =/[`~!@#$%^&*_+<>{}\/'[\]]/im;
+  //   // console.log($('input[name="storename"]'));
+
+  //   $('input[name="storename"]').blur(function () {
+  //     console.log($('input[name="storename"]').val());
+  //     var name = $('input[name="storename"]').val();
+  //     var address = $('input[name="address"]').val();
+  //     console.log(address);
+  //     // //判断店铺是否为空
+  //     if(name ==''){
+
+  //       $('input[name="storename"]').after('<span style="position:relative;">店铺名不能为空</span>');
+
+  //       return false;
+
+  //     }else if(re.test(name)){
+
+  //        $('input[name="storename"]').after('<span style="position:relative;">店铺名不能有特殊字符</span>');
+
+  //       return false;
+
+  //     }else if(address == '') {
+
+  //       $('input[name="address"]').after('<span style="position:relative;">店铺地址不能为空</span>');
+
+  //       return false;
+
+  //     }
+    
+  //   }).focus(function (){
+
+  //       $('input[name="storename"]').next().remove('span');
+
+  //   })
+
+  //     //判断店铺地址是否为空
+  //     // if(address ==''){
+
+  //     //   $('input[name="address"]').after('<span>店铺名不能为空</span>');
+
+  //     //   return false;
+
+  //     // }
+  // $("#btn").click( function () { 
+  //   console.log(1123);
+  //   $.post("{:U('ManStore/storeApplication')}",{},function (data){
+  //   })
+  // });
+
+
+
+  </script>
+</block>

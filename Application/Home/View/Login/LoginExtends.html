@@ -1,0 +1,186 @@
+<extend name="base" />
+<block name="main">	
+	</style>
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/login.css">
+	<div style="background:white;height:480px">
+		
+		<div class="left" style="position:absolute;left:190px;top:120px">	
+			<img src="__PUBLIC__/images/4.png" alt="">
+		</div>
+		<div class="left" style="position:absolute;left:800px;top:200px ">
+				<form action="javascript:;" >
+				  <div class="form-group">
+
+				  	<span class="c">账号登录</span>
+				  </div>
+				  <div class="form-group">
+				  	<i class="icon icon-phone"></i>
+				    <input type="text" class="form-control a width" id="exampleInputPassword1" placeholder="用户名/邮箱" name="username" style="display:inline;padding:6px 33px;">
+				  </div>
+				  <div class="form-group" >
+				  	<i class="icon1 icon-phone1"></i>
+				    <input type="password" class="form-control a width" id="exampleInputPassword1" placeholder="密码" style="display:inline;padding:6px 33px" name="pass">
+				  </div>
+
+				  <div class="row cl" style="width:230px;margin-left:0px;display:none" id="btn">
+
+				  	<div style="display:inline;">
+						<input class="input-text size-L" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码:'}" onclick="if(this.value=='验证码:'){this.value='';}" style="width:66px;height:37px" name ="code">
+						<img src="{:U('Login/makeCode')}" onclick="this.src='{:U('Login/makeCode')}?'+Math.random()" style="width:160px;height:36px;" name="img" btn="img" >
+					</div>
+
+				  </div>
+					<div class="checkbox">
+				    <label>
+				      <input type="checkbox" >7天内自动登录
+				    </label>
+				    <a href="{:U('Login/seekPass')}" style="color:#FA9700;position:absolute;left:170px" >忘记密码</a>
+				 	 </div>
+				  <button id="bbt" class="btn  color" style="display:inline">登录</button>
+				</form>
+				</div>
+		</div>
+		<script>
+
+			var i = 0;
+
+			$('#bbt').click(function(){
+
+				var username = $('input[name="username"]');
+
+				var name1 = username.val();
+
+				// alert(name1);
+
+				var pass = $('input[name="pass"]');
+
+				var pass1 = pass.val();
+				//当点击的时候判断用户名是否为空
+				if(username.val() ==''){
+
+					username.next().remove('span');
+
+					username.after('<span style="color:#FA9700" >请输入账号和密码</span>');
+
+					return false;
+
+				}else{
+
+					username.next().remove('span');
+
+				}
+
+				//当点击按钮的时候判断密码是否为空
+				if(pass.val() ==''){
+
+					pass.next().remove('span');
+
+					pass.after('<span style="color:#FA9700">请输入密码</span>');
+
+					return false;
+				}else{
+
+					pass.next().remove('span');
+				}
+
+				// //判断验证码是否为空
+
+				if( i>2 ){
+
+					if($('input[name="code"]').val() =='')
+					{
+
+					// alert('验证码不能为空');
+
+					$('img[name="img"]').next().remove('span');
+
+					$('img[name="img"]').after('<span style="color:#FA9700">请输入验证码</span>');
+
+					return false;
+
+					}
+
+					var code = $('input[name="code"]').val();
+
+						// alert(code);
+
+						location.href ="{:U('Login/Code')}?id="+code+"&name="+name1+"&pass="+pass1;
+
+				}
+
+				// 触发ajax进行判断帐号密码是否正确
+
+				var n = username.val();
+
+				var m = pass.val();
+				// console.log(n);
+				// var check = $('input[type="checkbox"]');
+
+				// if(check.attr('checked'))
+				if($('input[type="checkbox"]').prop('checked') ==true){
+
+					var checked = true;
+
+				}else{
+
+					var checked = false;
+				}
+
+				$.post('{:U("Login/LoginExtends")}',{name:n,pass:m,checked:checked},function (data){
+
+					// console.log(data);
+
+					if( data == 0)
+					{
+
+						var str = "{:U('Login/status')}?name="+name1;
+
+						//未激活
+						// alert('未激活');	
+						pass.next().remove();
+						pass.after('<a style="color:#FA9700" href="'+str+'">此用户未激活，点击激活</a>');
+						
+
+					}
+
+					if( data == 1 )
+					{
+
+						// alert(i);
+
+						//登录成功
+						location.href ="{:U('Index/index')}";
+
+					}
+
+					if( data == 2)
+					{
+
+						//验证失败
+						pass.next().remove();
+						pass.after('<span style="color:#FA9700">账号或密码错误，请重新输入</span>');
+						i = i+1;
+						// alert(i);
+						if(i>2)
+						{
+
+							$('#btn').show();
+
+						 }
+					}
+
+					if( data == 4){
+
+						pass.next().remove();
+						pass.after('<span>此用户已经被禁用,请联系管理员</span>');
+
+					}
+
+				},'json');
+
+			});
+			
+			
+
+		</script>
+</block>

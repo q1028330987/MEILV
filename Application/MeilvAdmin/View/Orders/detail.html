@@ -1,0 +1,28 @@
+<extend name="list" />
+<block name="main">
+
+	<div class="container">
+		<table class="table table-border  table-hover">
+			<tr>
+				<th>商品名</th>
+				<th>图片</th>
+				<th>单价</th>
+				<th>数量</th>
+			</tr>
+			<foreach name="list" item="v">
+				<tr>
+					<td>{$v['gid']['name']}</td>
+					<td><img src="__PUBLIC__/{$v['gid']['pic']}" height="50"></td>
+					<td>￥{$v['gid']['price']}</td>
+					<td>{$v['num']}</td>
+				</tr>
+			</foreach>
+			<tr>
+				<td><a href="{:U('Orders/ordersList')}">返回</a></td>
+				<td></td>
+				<td></td>
+				<td>订单总价:￥{$totalprice}</td>
+			</tr>
+		</table>
+	</div>
+</block>

@@ -1,0 +1,121 @@
+<extend name="saleOrders" />
+<block name="style">
+	<style>
+		.mya a,span{
+			position: relative;
+			top:0px;
+			right:0px;
+    }
+    .favorite-cont .favorite-box {
+    width: 839px;
+}
+	</style>
+</block>
+<block name="main">
+<div class="favorite-cont clearfix">
+  <div class="orders-tab fl">
+    <span href="javascript:;" class="tab">
+      <span class="title">订单查询</span>
+      <ul>
+        <li><a href="{:U('Orders/index')}" class="borderradius-1 order-today ">近期订单</a></li>
+      </ul>
+    </span>  
+    <span href="javascript:;" class="tab">
+      <span class="title">账号管理</span>
+      <ul>
+        <li><a href="{:U('User/userInfo')}" class="borderradius-1 my-account ">我的账号</a></li>
+        <li><a href="{:U('User/collect')}" class="borderradius-1 my-favorite active">我的收藏</a></li>
+        <li><a href="{:U('Orders/myRate')}" class="borderradius-1 my-favorite ">我的评论</a></li>
+      </ul>
+    </span>
+    <span href="javascript:;" class="tab">
+      <span class="title">我的店铺</span>
+      <ul>
+        <li><a href="{:U('Orders/saleOrders')}" class="borderradius-1 my-account ">店内订单</a></li>
+        <li><a href="{:U('User/userStore')}" class="borderradius-1 my-favorite ">店内商品</a></li>
+      </ul>
+    </span>
+  </div>
+
+
+  <div class="favorite-box"  id="favorite-box">
+    <h2>收藏的商家</h2>
+    <div class="save-up-cancel j-save-up-cancel">取消收藏成功</div>
+      <div class="list-wrapper">
+        <ul class="clearfix">
+        <foreach name="list" item="v">
+          <li class="fl favorite-list" data-id="{$v.sid}">
+            <div class="list-animate">  <a href="" target="_blank" class="restaurant-info ct-lightgrey">
+              <div class="preview fl">
+                <img class="scroll-loading" src="__PUBLIC__/{$v.pic}" data-src="__PUBLIC__/{$v.pic}" data-max-width="118" data-max-height="88" width="118" height="88" />
+              </div>
+              <div class="content">
+                <div class="name">
+                  <span title="{$v.name}">
+              {$v.name}
+                  </span>
+                </div>
+                <div class="rank clearfix">
+                  <span class="star-ranking fl">
+                    <!-- 5颗星60px长度，算此时星级的长度 -->
+                    <!-- 算出空白填充的部分长度 -->
+                    <span class="star-score" style="width:{$v.levelData}px"></span>
+                  </span>            
+                  <span class="score-num fl">{$v['level']!=0?$v['level']:'暂无'}</span>
+                 <!--   <span class="total cc-lightred-new fr">
+                      月售210单
+                    </span> -->
+                </div>
+                <div class="price">
+                  <span class="start-price">起送:￥{$v.upsend}</span>
+                    <span class="send-price">
+                        {$v.peisend}元配送费
+                    </span>
+                    <span class="send-time"><i class="icon i-poi-timer"></i>
+                          {$v.atime}分钟
+                    </span>
+                </div>
+              </div>
+              </a>
+              <div class="other clearfix">
+                <div class="discount fl">
+                    <i class="icon i-pay fl"></i>
+                    <i class="icon i-minus fl"></i>
+                </div>
+                <div class="fr save-up-box ct-lightgrey">
+                  <span class="fr"><i class="icon i-heart-12 fl"></i>
+                    <a href="javascript:;" class="j-save-up ct-lightgrey fl favorite j-save-up" data-a="{$v.id}" >取消收藏</a>
+                  </span>
+                  <span class="fr vertical-line">|</span>
+                  <span class="fr">收藏<strong class="cc-lightred-new"> (0)</strong></span>
+                </div>
+              </div>
+            </div>
+          </li>
+        </foreach>
+        </ul>
+      </div>
+  </div>
+</div>
+</block>
+<block name="script">
+  <script>
+      $('a').on('click',function(){
+        var id = $(this).parent().parent().parent().parent().parent().attr('data-id');
+        var uid = '{$v.uid}';
+        var that = $(this);
+        // console.log(uid);
+        // console.log($(this).parent().parent().parent().parent().parent().attr('data-id'));
+        // console.log($(this).parent().parent().parent().parent().parent());
+        $.post("{:U('')}",{sid:id,uid:uid},function (data){
+          console.log(data);
+          if (data) {
+
+            that.parent().parent().parent().parent().parent().remove();
+            
+          }
+
+        })
+      });
+  </script>
+</block>

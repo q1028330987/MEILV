@@ -1,0 +1,89 @@
+<extend name="User/saleOrders" />
+<block name="style">
+	<style>
+		.mya a,span{
+			position: relative;
+			top:0px;
+			right:0px;
+		}
+	</style>
+</block>
+<block name="main">
+  <div class="orders-tab fl">
+    <span href="javascript:;" class="tab">
+      <span class="title">订单查询</span>
+      <ul>
+        <li><a href="{:U('Orders/index')}" class="borderradius-1 order-today ">近期订单</a></li>
+      </ul>
+    </span>  
+    <span href="javascript:;" class="tab">
+      <span class="title">账号管理</span>
+      <ul>
+        <li><a href="{:U('User/userInfo')}" class="borderradius-1 my-account">我的账号</a></li>
+        <li><a href="{:U('User/collect')}" class="borderradius-1 my-favorite ">我的收藏</a></li>
+        <li><a href="{:U('Orders/myRate')}" class="borderradius-1 my-favorite ">我的评论</a></li>
+      </ul>
+    </span>
+    <span href="javascript:;" class="tab">
+      <span class="title">我的店铺</span>
+      <ul>
+        <li><a href="{:U('Orders/saleOrders')}" class="borderradius-1 my-account ">店内订单</a></li>
+        <li><a href="{:U('User/userStore')}" class="borderradius-1 my-favorite ">店内商品</a></li>
+      </ul>
+    </span>
+  </div>
+  <div class="setting-box" id="setting-box">
+
+      <form class="form-horizontal" action="{:U('')}" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="id" value="{$info.id}">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">店铺名:</label>
+          <div class="col-sm-10">
+            <input id="name" type="tel" class="form-control" name="name" style="width: 150px"  value="{$info.name}">
+          </div>
+          <label class="col-sm-2 control-label">店铺相片:</label>
+          <div class="col-sm-10" >
+            <img style="height:100px;" src="__PUBLIC__/{$info.pic}" class="img-thumbnail" alt="Responsive image">
+          </div>
+          <label class="col-sm-2 control-label">修改店铺相片:</label>
+          <div class="col-sm-10">
+            <input type="file" name="pic">
+            <p class="help-block">如果没有上传相片相当于不修改店铺相片</p>
+          </div>
+          <label class="col-sm-2 control-label">店铺号码:</label>
+          <div class="col-sm-10">
+            <input id="phone" type="tel" class="form-control" name="phone" style="width: 150px"  value="{$info.phone}">
+          </div>
+          <label class="col-sm-2 control-label">营业时间:</label>
+          <div class="col-sm-10">
+            <select class="form-control img-thumbnail" name="start" style="width: 90px; float: left;">
+<for start="0" end="25">
+              <option {$i==$info['start']?selected:''}>{$i}:00</option>
+</for>
+            </select>
+            <p style="width: 20px;margin-left: 20px;margin-right: 20px; float: left;"  class="form-control-static">至</p>
+            <select class="form-control" name="stop" style="width: 90px; float: left;">
+<for start="0" end="25">         
+              <option {$i==$info['stop']?selected:''}>{$i}:00</option>
+</for>
+            </select>
+          </div>
+          <label for="" class="col-sm-2 control-label">起送费:</label>
+          <div class="col-sm-10">
+            <input type="number" style="width: 100px" name="upsend" class="form-control"  value="{$info.upsend}">
+          </div>
+          <label for="inputPassword" class="col-sm-2 control-label">配送费:</label>
+          <div class="col-sm-10">
+            <input type="number" style="width: 100px" name="peisend" class="form-control" value="{$info.peisend}" >
+          </div>
+        </div>
+        <button type="submit" style="margin-left: 130px;" class="btn btn-default">提交</button>
+      </form>
+        
+  </div>
+
+</block>
+<block name="script">
+  <script>
+  </script>
+  </block>
